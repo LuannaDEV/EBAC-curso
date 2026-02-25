@@ -10,7 +10,7 @@ def menu():
    
     print("4 - Para escolher atualizarr a quantidade de livros")
     
-    print("5 - Para escolher registar um emprestimo")
+    print("5 - Para escolher registrar um emprestimo")
    
     print("6 - Exibir historico de emprestimos")
     
@@ -52,43 +52,48 @@ def listar_livros(biblioteca):
 def atualizar_quantidade(biblioteca):
     titulo =  input("Qual livro deseja atualizar a quantidade? ")
     
-    if livro not in biblioteca: 
+    if titulo not in biblioteca: 
         print("Este livros nao esta na biblioteca!")
         return
     
     nova_quantidade = int(input(f'Qual a nova quantidade? Quantidade atual:  {biblioteca[titulo] ["quantidade"]} Quantidade atual: '))
     biblioteca[titulo]["quantidade"] = nova_quantidade
     
-    print(f'Quantidade atualizar do livro:{titulo}   para:  {novaquantidade}')
+    print(f'Quantidade atualizar do livro:{titulo}   para:  {nova_quantidade}')
     
     
     
-    def fazer_emprestimo(biblioteca,historico):
-        titulo = input("Qual o titulo do livro para emprestimo? ")
+def fazer_emprestimo(biblioteca,historico):
+    titulo = input("Qual o titulo do livro para emprestimo? ")
 
 
-        if titulo not in biblioteca:
-            print("Este livro nao existe")
-            return
+    if titulo not in biblioteca:
+        print("Este livro nao existe")
+        return
         
-        if biblioteca[titulo]["quantidade"] == 0:
-            print("Nao ha quantidade disponivel deste livro.")
-            return
-        nome = input("Digite o nome do solicitante")
-        biblioteca[titulo]["quantidade"] -=1
-        historico.append({"livro": titulo, "solicitante": nome})
-        print(f'Emprestimo de "{titulo}" registrado para {nome}!')
+    if biblioteca[titulo]["quantidade"] == 0:
+        print("Nao ha quantidade disponivel deste livro.")
+        return
+    nome = input("Digite o nome do solicitante ")
+    quantidade = int(input("Quantos exemplares deseja retirar? "))
+    
+    if quantidade >biblioteca[titulo]["quantidade"]:
+        print(f"Quantidade insuficiente. Disponivel: {biblioteca[titulo]['quantidade']}")
+    
+    biblioteca[titulo]["quantidade"] -= quantidade
+    historico.append({"livro": titulo, "solicitante": nome})
+    print(f'Emprestimo de "{titulo}" registrado para {nome}!')
         
         
-    def exibir_historico( historico):
-        if not historico:
-            print("Nao exite historico de emprestimos.")
-            return
+def exibir_historico( historico):
+    if not historico:
+        print("Nao exite historico de emprestimos.")
+        return
         
-        print("\n--- Historico de Emprestimos ---")
+    print("\n--- Historico de Emprestimos ---")
         
-        for i, registro in enumerate(historico, 1):
-            print(f'{i}. Livro: {registro["livro"]} / Solicitante: {registro["solicitante"]}')
+    for i, registro in enumerate(historico, 1):
+        print(f'{i}. Livro: {registro["livro"]} / Solicitante: {registro["solicitante"]}')
 
         
 def main():
@@ -110,7 +115,7 @@ def main():
         elif opcao == "4":
             atualizar_quantidade(biblioteca)
         elif opcao == "5":
-            registrar_livro(biblioteca, historico)
+            fazer_emprestimo(biblioteca, historico)
         elif opcao == "6":
             exibir_historico(historico)
         elif opcao == "7":
