@@ -47,18 +47,18 @@ class Livro(BaseModel):
     ano_livro: int
 
 @app.post("/adiciona/{id_livro}")
-def post_livros(id_livro: int, livro: Livro):
+def post_livros(id_livro: int, livro: Livro,credentials: HTTPBasicCredentials = Depends(autenticar_meu_usuario)):
     if id_livro in meus_livros:
         raise HTTPException(status_code=400, detail="Este livro ja existe")
     else:
         meus_livros[id_livro]= livro.dict()
             
         
-        return {"O livro foi criado com sucesso"}
+        return {"mensagem": "O livro foi criado com sucesso"}
 
 
 @app.get("/livros")
-def get_livros(page:int = 1, limit: int= 10,order_by: str = "id", order_dir: str = "asc", credentials: HTTPBasicCredentials = Depends(autenticar_meu_usuario)):
+def get_livros(order_by: str = "id", order_dir: str = "asc", page:int = 1, limit: int= 10, credentials: HTTPBasicCredentials = Depends(autenticar_meu_usuario)):
     if page < 1 or limit < 1:
         raise HTTPException(status_code=400, detail= "Page ou limit invalidos!")
     
@@ -67,11 +67,22 @@ def get_livros(page:int = 1, limit: int= 10,order_by: str = "id", order_dir: str
     
     
     
+    
     lista_livros = [{"id": id, **dados} for id, dados in meus_livros.items()]
 
     reverse = order_dir == "desc"
     lista_livros.sort(key=lambda x: x[order_by], reverse=reverse)
 
+
+#order_by: ordena pelo nome do campo
+
+    campos_validos = {"id", "nome_livro", "autor_livro", "ano_livro"} 
+    if order_by not in campos_validos:
+        raise HTTPException(status_code=400, detail="Campo de ordenação inválido!")
+    
+#order_dir: define se vai paginar de forma descrente ou crescente, asc: crescente, desc: crescente
+    if order_dir not in ("asc", "desc"):
+        raise HTTPException(status_code=400, detail="order_dir inválido! Use 'asc' ou 'desc'.")
     
     start = (page - 1) * limit                       
     livros_paginados = lista_livros[start: start + limit]
@@ -88,7 +99,7 @@ def get_livros(page:int = 1, limit: int= 10,order_by: str = "id", order_dir: str
         
 
 @app.put("/atualiza/{id_livro}")
-def put_livros (id_livro: int, livro: Livro):
+def put_livros (id_livro: int, livro: Livro, credentials: HTTPBasicCredentials = Depends(autenticar_meu_usuario)):
     meu_livro = meus_livros.get(id_livro)
     if not meu_livro:
         raise HTTPException(status_code=404, detail="Este livro nao foi encontrado")
@@ -100,10 +111,10 @@ def put_livros (id_livro: int, livro: Livro):
     
     
 @app.delete("/delete/{id_livro}")
-def delete_livros(id_livro:int):
+def delete_livros(id_livro:int, credentials: HTTPBasicCredentials = Depends(autenticar_meu_usuario)):
     if id_livro not in meus_livros:
         raise HTTPException(status_code=404, detail= "Este livro nao existe")
     else:
         del meus_livros[id_livro]
-        return {"mensagem": "Tarefa deletada com sucesso!"}
+        return {"mensagem": "Livro deletado com sucesso!"}
     
