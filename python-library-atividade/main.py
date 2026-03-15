@@ -68,10 +68,9 @@ def get_livros(order_by: str = "id", order_dir: str = "asc", page:int = 1, limit
     
     
     
-    lista_livros = [{"id": id, **dados} for id, dados in meus_livros.items()]
+    lista_livros = [{"id": id_livro, **dados} for id_livro, dados in meus_livros.items()]
 
-    reverse = order_dir == "desc"
-    lista_livros.sort(key=lambda x: x[order_by], reverse=reverse)
+    
 
 
 #order_by: ordena pelo nome do campo
@@ -83,6 +82,9 @@ def get_livros(order_by: str = "id", order_dir: str = "asc", page:int = 1, limit
 #order_dir: define se vai paginar de forma descrente ou crescente, asc: crescente, desc: crescente
     if order_dir not in ("asc", "desc"):
         raise HTTPException(status_code=400, detail="order_dir inválido! Use 'asc' ou 'desc'.")
+    
+    reverse = order_dir == "desc"
+    lista_livros.sort(key=lambda x: x[order_by], reverse=reverse)
     
     start = (page - 1) * limit                       
     livros_paginados = lista_livros[start: start + limit]
