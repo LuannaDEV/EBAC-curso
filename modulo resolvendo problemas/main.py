@@ -15,7 +15,7 @@ def adicionar():
     try:
         nome = input("Qual o nome do pokemon? ")
         tipo = input("Qual o tipo do pokemon? ")
-        
+        capturas = int(input("Quantas vezes voce capturou este pokemon? "))
         while True:
             nivel = int(input("Qual o nivel do pokemon? "))
             if nivel > 100 or nivel <= 0:
@@ -29,7 +29,8 @@ def adicionar():
         novo_pokemon = {
             "nome": nome,
             "tipo": tipo,
-            "nivel": nivel
+            "nivel": nivel,
+            "capturas":capturas
         }
 
         pokemon.append(novo_pokemon)
@@ -41,7 +42,7 @@ def adicionar():
         
 def atualizar():
     try:
-        pokemon_nome = input("Qual pokemon voce deseja remover?")
+        pokemon_nome = input("Qual pokemon voce deseja atualizar?")
         
         for p in pokemon:
             if p["nome"].lower() == pokemon_nome.lower():
@@ -56,11 +57,11 @@ def atualizar():
 
 def deletar():
     try:
-        pokemon_nome = input("Qual pokemon voce deseja deletar: ")
+        pokemon_nome = input("Qual pokemon voce deseja deletar? ")
         
         for p in pokemon:
             if p["nome"].lower() == pokemon_nome.lower():
-                pokemon.remove(p)4
+                pokemon.remove(p)
                 print("pokemon deletado com sucesso")
                 return
             print("Este pokemon nao existe!")
@@ -68,14 +69,7 @@ def deletar():
         print("valor invalido!")            
         
         
-def listar():
-    if not pokemon:
-        print("nao ha nenhum pokemon!")
-        return
-    for p in pokemon:
-        print(f"Nome: {p['nome']} | Tipo: {p['tipo']} | Nivel: {p['nivel']} | Capturas: {p['capturas']}")
-   
-   
+
 
         
 def capturas():
@@ -106,6 +100,20 @@ def capturas():
         if not encontrado:
             print("Este pokemon nao existe!")
         
+       
+def listar():
+    if not pokemon:
+        print("nao ha nenhum pokemon na lista!")
+        return
+    for p in pokemon:
+        print(f"Nome: {p['nome']} | Tipo: {p['tipo']} | Nivel: {p['nivel']} | Capturas: {p['capturas']}")
+   
+          
+       
+       
+
+       
+       
        
             
 def exibir_historico():
@@ -143,7 +151,7 @@ def main():
                 break
             
         except ValueError:
-            print("valor invalido!")
+            print("valor invalido! Escolha um valor dentro da lista.")
         
  
 main()
