@@ -14,18 +14,23 @@ def menu():
 def adicionar():
     try:
         nome = input("Qual o nome do pokemon? ")
+        
+        for p in pokemon:
+            if p["nome"].lower() == nome.lower():
+                print("Este pokemon ja existe!")
+                return
+        
         tipo = input("Qual o tipo do pokemon? ")
         capturas = int(input("Quantas vezes voce capturou este pokemon? "))
-        while True:
-            nivel = int(input("Qual o nivel do pokemon? "))
-            if nivel > 100 or nivel <= 0:
-                print("valor invalido! Nivel tem que ser maior que 0 e menor que 100")
-            else:
-                break   
+        
+
+        nivel = int(input("Qual o nivel do pokemon? "))
+        if nivel > 100 or nivel <= 0:
+            print("valor invalido! Nivel tem que ser maior que 0 e menor que 100")
+            return
+        
+                
             
-        
-        
-        
         novo_pokemon = {
             "nome": nome,
             "tipo": tipo,
@@ -41,19 +46,32 @@ def adicionar():
         
         
 def atualizar():
+    if not pokemon:
+        print("Nao ha nenhum pokemon!")  
+        return
     try:
         pokemon_nome = input("Qual pokemon voce deseja atualizar?")
         
         for p in pokemon:
             if p["nome"].lower() == pokemon_nome.lower():
-                p["tipo"] = input("Novo tipo:")
-                p["nivel"] = int(input("Novo nivel:"))
-                print("Pokemon atualizado!")
+                
+                novo_tipo = input("Novo tipo: ")
+                novo_nivel = int(input("Novo nivel: "))
+
+                
+                if novo_nivel >100 or novo_nivel <=0:
+                    print("Valor invalido! Nivel tem que ser maior que 0 e menor ou igual a 100.")
+                    return
+                p["tipo"] = novo_tipo
+                p["nivel"] = novo_nivel
+                print("Pokemon atualizado")
                 return
+                     
+       
         print("Este pokemon nao existe")
     except ValueError:
         print("Valor invalido!")
-        
+            
 
 def deletar():
     try:
@@ -62,11 +80,11 @@ def deletar():
         for p in pokemon:
             if p["nome"].lower() == pokemon_nome.lower():
                 pokemon.remove(p)
-                print("pokemon deletado com sucesso")
+                print(f"O pokemon {pokemon_nome} foi deletado com sucesso!")
                 return
-            print("Este pokemon nao existe!")
+        print("Este pokemon nao existe na lista!")
     except ValueError:
-        print("valor invalido!")            
+        print("valor invalido! Tente novamente.")            
         
         
 
@@ -77,15 +95,16 @@ def capturas():
         print("nao ha nenhum pokemon!")
         return
     pokemon_escolhido = input("Digite o pokemon que deseja atualizar: ")  
-    
+        
     encontrado = False
-    
+        
     for p in pokemon:
-        if p["nome"].lower() == pokemon_escolhido:
+        if p["nome"].lower() == pokemon_escolhido.lower():
             quant = int(input("Digite a quantidade de vezes que ele foi capturado: "))
             p["capturas"] = quant
-            print("Quantidade de capturas do pokemon atualizada!")
+            print(f"Quantidade de capturas do pokemon {pokemon_escolhido} atualizada para {quant}")
             encontrado = True
+                
 
             entrada = {
                 "nome":p["nome"],
@@ -93,12 +112,12 @@ def capturas():
             }
             historico_capturas.append(entrada)
             print(f"Capturas de {p['nome']} atualizadas para {quant}!")
-         
-         
-            break
             
-        if not encontrado:
-            print("Este pokemon nao existe!")
+            
+            break
+                
+    if not encontrado:
+        print("Este pokemon nao existe!")
         
        
 def listar():
@@ -122,7 +141,8 @@ def exibir_historico():
         return
     
     for p in historico_capturas:
-        
+        print("//HISTORICO CAPTURA POKEMONS//")
+       
         print(f"Nome: {p['nome']} | Capturas:  {p['capturas']}")
       
     
@@ -137,21 +157,21 @@ def main():
 
             if opcao == "1":
                 adicionar()
-            if opcao == "2":
+            elif opcao == "2":
                 atualizar()
-            if opcao == "3":
+            elif opcao == "3":
                 deletar()
-            if opcao == "4":
+            elif opcao == "4":
                 listar()
-            if opcao == "5":
+            elif opcao == "5":
                 capturas()
-            if opcao == "6":
+            elif opcao == "6":
                 exibir_historico()
-            if opcao == "7":
+            elif opcao == "7":
                 break
             
         except ValueError:
-            print("valor invalido! Escolha um valor dentro da lista.")
+            print("valor invalido! Escolha uma opcao dentro da lista.")
         
  
 main()
